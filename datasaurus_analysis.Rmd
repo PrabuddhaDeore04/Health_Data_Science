@@ -5,26 +5,58 @@ date: "2025-05-09"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+library(tidyverse) 
+library(datasauRus)
+
+```
+```{r}
+#?datasaurus_dozen
+
+```
+```{r}
+# Count the rows and columns and list the variables
+dim(datasaurus_dozen)
+names(datasaurus_dozen)
+
 ```
 
-## R Markdown
+```{r}
+# Filter for the 'dino' dataset
+dino_data <- datasaurus_dozen %>%
+  filter(dataset == "dino")
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Preview the first few rows
+head(dino_data)
+```
+```{r}
+# Compute summary statistics
+summary_stats <- dino_data %>%
+  summarise(
+    mean_x = mean(x),
+    mean_y = mean(y),
+    sd_x = sd(x),
+    sd_y = sd(y),
+    correlation = cor(x, y)
+  )
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# Print the summary
+summary_stats
 
-```{r cars}
-summary(cars)
+```
+```{r}
+ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
+  geom_point()
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r all-datasets-plot, fig.width=10, fig.height=15}
+ggplot(datasaurus_dozen, aes(x = x, y = y, color = dataset))+
+  geom_point(size= 1.5)+
+  facet_wrap(~ dataset, ncol = 3) +
+  theme(legend.position = "none")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Summary
+
+The Datasaurus Dozen data set highlights the importance of data visualization. While the summary statistics, such as mean, standard deviation, and correlation, are very similar for these data sets, their visual forms show very different shapes and patterns. This fact demonstrates that using only statistical measures can lead to incorrect interpretations and highlights the importance of using visualizations to identify underlying structures or anomalies in the data.
+
